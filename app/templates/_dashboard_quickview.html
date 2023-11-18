@@ -1,0 +1,60 @@
+<div class="container">
+    <h2>Quick View</h2>
+    <div class="row">
+        <div class="col">
+            <h4>
+                {% set assigned_budget = proposal.budget-proposal.get_remaining_budget() %}
+                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top"
+                        title="Total Available Budget of the Topic">
+                    Total Budget: {{'%0.2f' % proposal.budget|float}} k€
+                </button>
+                {% if assigned_budget > proposal.budget %}
+                <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top"
+                        title="Computed considering the Reimbursement Rate of each Participant">
+                    Assigned Budget: {{'%0.2f' % assigned_budget|float}} k€
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top"
+                        title="Computed considering Reimbursement Rate of each Participant">
+                    Assigned Budget: {{'%0.2f' % assigned_budget|float}} k€
+                </button>
+                {% endif %}
+            </h4>
+
+            <h4>Participants</h4>
+            <h4>
+                {% for item in proposal.proposal_participant | sort(attribute='participant_number') %}
+                {% if item.is_coordinator %}
+                <div class="badge badge-warning"> {% else %}
+                    <div class="badge badge-primary">{% endif %}
+                        <a class="text-reset"
+                           href="{{ url_for('main.edit_participant', proposal_acronym=proposal.acronym, company_acronym=item.company.acronym) }}">
+                            <strong>{{item.participant_number}}</strong> - {{item.company.acronym}} {% if
+                            item.is_coordinator %} - Coordinator {% endif %} </a> <a
+                                href="{{ url_for('main.remove_participant',
+                        proposal_acronym=proposal.acronym, company_acronym=item.company.acronym)}}">&times; </a></div>
+                    {% endfor %}
+            </h4>
+            <br>
+            <p><a class="btn btn-secondary"
+                  href="{{ url_for('main.add_participant', proposal_acronym=proposal.acronym) }}"
+                  role="button">{{ _('Add Participant') }} &raquo;</a></p>
+            <hr>
+        </div>
+        <div class="col">
+            <div id="chart"></div>
+        </div>
+    </div>
+</div> <!-- /container -->
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+             <h4>WP Efforts</h4>
+            {{effort_table}}
+        </div>
+        <div class="col">
+            <div id="map"></div>
+        </div>
+    </div>
+</div> <!-- /container -->

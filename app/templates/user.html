@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+{% if current_user.is_anonymous %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3 text-center"> Please Log in </h1>
+    </div>
+</div>
+
+{% else %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3 text-center"> {{ current_user.name }} <span class="text-muted"> {{ current_user.surname.upper() }} </span>
+        </h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <img src="{{ current_user.avatar(256) }}">
+        </div>
+        <div class="col">
+            <h4><span class="text-muted"> {{ _('username') }} </span>: {{ current_user.username }}</h4>
+            {% if current_user.last_seen %}
+            <p>{{ _('Last seen on') }}: {{ moment(current_user.last_seen).format('LLL') }}</p>
+            {% endif %}
+            <h4> Proposals Membership </h4>
+            <ul class="list-unstyled mt-3 mb-4">
+                {% for item in current_user.proposal_user %}
+                <li><a href="{{ url_for('main.dashboard', proposal_acronym=item.proposal.acronym)}}">
+                    {{item.proposal.acronym}} </a></li>
+                {% endfor %}
+            </ul>
+            <h4> API Token </h4>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Show Token
+            </button>
+        </div>
+        <div class="col-2">
+            {{wtf.quick_form(form)}}
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">API Token</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <samp>{{current_user.get_token()}}</samp>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+{% endblock %}

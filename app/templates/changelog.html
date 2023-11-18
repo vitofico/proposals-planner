@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">{{proposal.acronym}} - <small class="text-muted"> Changelog </small></h1>
+        <p align="justify">{{proposal.description|safe}}</p>
+        <p><a class="btn btn-info btn-lg"
+              href="{{ url_for('main.dashboard', proposal_acronym=proposal.acronym) }}"
+              role="button">&laquo; {{ _('Back to Proposal') }}</a></p>
+    </div>
+</div>
+<div class="container">
+    {% for version in proposal.versions %}
+    {% set version_number = loop.index - 1 %}
+    {% set last_version = loop.length - 1 %}
+    {% include '_change.html' %}
+    {% endfor %}
+    <hr>
+    <p><a class="btn btn-info btn-lg"
+          href="{{ url_for('main.dashboard', proposal_acronym=proposal.acronym) }}"
+          role="button">&laquo; {{ _('Back to Proposal') }}</a></p>
+</div>
+
+{% endblock %}

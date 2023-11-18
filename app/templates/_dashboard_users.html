@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Users</h3>
+            <h4>
+                {% for item in proposal.user_membership %}
+                {% if item.is_responsible() %}
+                <div class="badge badge-warning"> {% else %}
+                    <div class="badge badge-primary">{% endif %}
+                        {{item.user.name}} {{item.user.surname|upper}} - {{item.role|replace("2",
+                        "Responsible")|replace("1",
+                        "Collaborator")|replace("0", "Read Only")}}
+                        <a href="{{ url_for('main.remove_user',
+                        proposal_acronym=proposal.acronym, username=item.user.username)}}">&times; </a></div>
+                    {% endfor %}
+            </h4>
+            <p><a class="btn btn-secondary"
+                  href="{{ url_for('main.add_user', proposal_acronym=proposal.acronym) }}"
+                  role="button">{{ _('Add/Edit User') }} &raquo;</a></p>
+
+        </div> <!-- Column Class  -->
+
+        <div class="col-8">
+            <h3> Files </h3>
+
+            <ul class="d-flex flex-wrap">
+                {%- for item in tree['children'] %}
+                <li class="list-group-item">
+                    <a class="text-reset"
+                       href="{{ url_for('main.get_file', proposal_acronym=proposal.acronym, filename=item['filename']) }}">{{item['filename']}} - {{item['date']}}</a>
+                    <div class="badge badge-danger badge-pill"><a class="text-reset"
+                                                                  href="{{ url_for('main.delete_file', proposal_acronym=proposal.acronym, filename=item['filename']) }}">&times;</a>
+                    </div>
+                </li>
+                {%- endfor %}
+            </ul>
+            <br>
+            <p><a class="btn btn-secondary"
+                  href="{{ url_for('main.upload_file', proposal_acronym=proposal.acronym) }}"
+                  role="button">{{ _('Upload File') }} &raquo;</a></p>
+
+        </div> <!-- Column Class  -->
+    </div> <!-- Row Class  -->
+</div> <!-- /container -->

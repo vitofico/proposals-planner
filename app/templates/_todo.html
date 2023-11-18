@@ -1,0 +1,37 @@
+<div class="col mb-4" data-role="todo">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h4 class="proposal_body font-weight-normal"><small
+                            class="text-muted">#{{todo.id}}</small></h4>
+                </div>
+                <div class="col-8">
+                    <h4 class="proposal_body font-weight-normal text-right">{{todo.due_date}}</h4>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <h3 class="card-title pricing-card-title">Assignee: <small
+                    class="text-muted">{{todo.ref_user.username}}</small></h3>
+            <h5> Description </h5>
+            <p align="justify">{{todo.description|safe}}</p>
+
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-lg btn-block btn-outline-primary"
+                       href="{{ url_for('main.proposal_todos_edit', proposal_acronym=proposal.acronym, todo_id=todo.id)}}"
+                       role="button">{{ _('Edit') }} </a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-lg btn-block btn-outline-danger"
+                       href="{{ url_for('main.proposal_todos_remove', proposal_acronym=proposal.acronym, todo_id=todo.id)}}"
+                       role="button">{{ _('Delete') }} </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

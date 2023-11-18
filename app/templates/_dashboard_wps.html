@@ -1,0 +1,23 @@
+<div class="container">
+    <h3>Work Packages</h3>
+    <br>
+    {{wp_table}}
+    <br>
+    <p><a class="btn btn-secondary"
+          href="{{ url_for('main.add_wp', proposal_acronym=proposal.acronym) }}"
+          role="button">{{ _('Add Work Package') }} &raquo;</a></p>
+</div> <!-- /container -->
+
+<div class="container">
+    <div id="gantt"></div>
+</div>
+
+<div class="container">
+    <hr>
+    <h4>Deliverables</h4>
+    {{deliverables_table}}
+    <hr>
+    <h4>Milestones</h4>
+    {{milestones_table}}
+    <br>
+</div>

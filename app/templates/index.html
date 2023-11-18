@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% from "bootstrap/pagination.html" import render_pagination %}
+
+{% block app_content %}
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">{{ _('Welcome %(username)s', username=current_user.name) }}</h1>
+  <p class="lead"> <a href="{{ url_for('main.add_proposal')}}"> Create </a> a new proposal or search between the existing ones...</p>
+</div>
+
+
+<div class="container">
+<div class="row pb-4">
+    <div class="col-12">
+        <input type="text" name="searchbox" id="searchbox" class="filterinput form-control" placeholder="Search by proposal or company...">
+    </div>
+</div>
+
+<div class="container">
+    {% if proposals %}
+
+        <br>
+        <br>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+            {% for proposal in proposals %}
+                {% include '_proposal.html' %}
+            {% endfor %}
+            </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $("#searchbox").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $('div[data-role="proposal"]').filter(function() {
+            $(this).toggle(($(this).find('h1').text().toLowerCase().indexOf(value) > -1) || ($(this).find('h4').text().toLowerCase().indexOf(value) > -1)
+            || ($(this).find('li').text().toLowerCase().indexOf(value) > -1) || ($(this).find('button').text().toLowerCase().indexOf(value) > -1))
+        });
+    });
+});
+</script>
+
+{% endblock %}

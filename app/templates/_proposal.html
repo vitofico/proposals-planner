@@ -1,0 +1,42 @@
+{% if proposal.user_is_included(current_user) or current_user.is_superuser() %}
+<div class="col mb-4" data-role="proposal">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+            <h4 class="proposal_body font-weight-normal">{{proposal.acronym}}
+                <div class="badge badge-{{proposal.status.badge_type}}">{{proposal.status.status}}</div>
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-outline-info btn-sm">{{proposal.call}}</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-outline-dark btn-sm">{{proposal.topic}}</button>
+                </div>
+            </div>
+
+            <h1 class="card-title pricing-card-title"><small class="text-muted">{{proposal.title}}</small></h1>
+            <div class="row">
+                <div class="col">
+                    <h5> Participants </h5>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for item in proposal.proposal_participant | sort(attribute='participant_number') %}
+                        <li><strong>{{item.company.acronym}}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col">
+                    <h5> Work Packages </h5>
+                    {% for item in proposal.working_packages %}
+                    <div class="badge badge-warning">WP{{item.number}}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <a class="btn btn-lg btn-block btn-outline-primary"
+               href="{{ url_for('main.dashboard', proposal_acronym=proposal.acronym)}}"
+               role="button">{{ _('Details') }} </a>
+        </div>
+    </div>
+</div>
+{% endif %}

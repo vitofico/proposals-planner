@@ -1,0 +1,22 @@
+FROM python:3-alpine
+
+WORKDIR /planner
+
+RUN apk update
+RUN apk add build-base
+RUN apk add python3-dev
+RUN apk add mariadb-dev
+RUN apk add mariadb-client
+#RUN apk add pandoc
+
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app app
+COPY migrations migrations
+COPY main.py config.py boot.sh ./
+RUN chmod +x boot.sh
+
+EXPOSE 5001
+
+ENTRYPOINT ["./boot.sh"]

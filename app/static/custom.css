@@ -1,0 +1,14 @@
+.badge {
+  .close {
+    padding-right: $badge-padding-x;
+    padding-left: $badge-padding-x;
+    margin-right: -$badge-padding-x;
+    font-size: inherit;
+    color: inherit;
+    text-shadow: none;
+  }
+}
+
+.badge-dark {
+background-color: #CD5C5C!important;
+}

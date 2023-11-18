@@ -1,0 +1,38 @@
+<div class="col mb-4" data-role="company">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+            <h4 class="proposal_body font-weight-normal">{{company.acronym}}
+                <div class="badge badge-dark">{{company.country}}</div>
+            </h4>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title pricing-card-title"><small class="text-muted">{{company.name}}</small></h1>
+            <h5> Description </h5>
+            <p align="justify">{{company.description|safe}}</p>
+            <div class="row">
+                <div class="col">
+                    <h5> Proposals Membership </h5>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        {% for proposal in company.memberships %}
+                        <li>{{proposal.acronym}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col">
+                    <h5> Contact </h5>
+                    <p><a href="mailto:{{company.contact_email}}"> {{company.contact_email}}</a></p>
+                </div>
+            </div>
+            <h5> Expertise </h5>
+            {% set list1 = company.specialisation.split(';') %}
+            {% for item in list1 %}
+            <div class="badge badge-info">{{item}}</div>
+            {% endfor %}
+
+            <hr>
+            <a class="btn btn-lg btn-block btn-outline-primary"
+               href="{{ url_for('main.edit_company', company_acronym=company.acronym)}}"
+               role="button">{{ _('Edit') }} </a>
+        </div>
+    </div>
+</div>

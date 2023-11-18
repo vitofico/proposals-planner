@@ -1,0 +1,56 @@
+version: "3"
+services:
+  app:
+    build: .
+    container_name: nous
+    restart: always
+    environment:
+      VIRTUAL_HOST: nous-theficos.duckdns.org
+      VIRTUAL_PORT: 5001
+      LETSENCRYPT_HOST: nous-theficos.duckdns.org
+      LETSENCRYPT_EMAIL: fserver104@gmail.com
+      MAIL_SERVER : ${MAIL_SERVER}
+      MAIL_PORT : ${MAIL_PORT}
+#     Docker setting true and false not working!
+#      MAIL_USE_TLS : ${MAIL_USE_TLS}
+#      MAIL_USE_SSL : ${MAIL_USE_SSL}
+      MAIL_USERNAME : ${MAIL_USERNAME}
+      MAIL_PASSWORD : ${MAIL_PASSWORD}
+      SECRET_KEY: 'verystrangekeytoguezz'
+      DATABASE_URL: 'mysql+mysqlconnector://${DB_USER}:${DB_PASSWORD}@db/${DATABASE}'
+      ADMIN_PASS: 'nous_pass'
+#      ELASTICSEARCH_URL: elasticsearch
+    networks:
+      - backend
+      - default
+    expose:
+      - 5001
+  db:
+    image: mysql:latest
+    container_name: nous-db
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - '/home/theficos/proposal_planner/mysql_volume/db:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: nous
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+#
+#  elasticsearch:
+#    ports:
+#      - '9200:9200'
+#      - '9300:9300'
+#    environment:
+#      - discovery.type=single-node
+#    container_name: nous-elasticsearch
+#    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.6.2'
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+  backend:

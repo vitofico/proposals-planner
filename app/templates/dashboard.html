@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">{{proposal.acronym}} - <small class="text-muted">{{proposal.title}}</small>
+            <div class="badge badge-{{proposal.status.badge_type}}">{{proposal.status.status}}</div>
+        </h1>
+        <p align="justify"> {{proposal.description|safe}}</p>
+        <div class="row">
+            <div class="col">
+                <p><a class="btn btn-info btn-lg"
+                      href="{{ url_for('main.proposal_changelog', proposal_acronym=proposal.acronym) }}"
+                      role="button">{{ _('Changelog') }} <i class="fas fa-redo"></i></a>
+                    <a class="btn btn-warning btn-lg"
+                      href="{{ url_for('main.proposal_todos', proposal_acronym=proposal.acronym) }}"
+                      role="button">{{ _('ToDos') }} <i class="fas fa-check-square"></i></a>
+                    <a class="btn btn-primary btn-lg"
+                       href="{{ url_for('main.edit_proposal', proposal_acronym=proposal.acronym) }}"
+                       role="button">{{ _('Edit Proposal') }} &raquo;</a></p>
+            </div>
+            <div class="col">
+                <div class="dropdown float-right">
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+                            data-toggle="dropdown" id="dropdownMenuButton" type="button">
+                        Export Proposal
+                    </button>
+                    <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('main.export_proposal', proposal_acronym=proposal.acronym, format='odt') }}">Open Document</a>
+                        <a class="dropdown-item" href="{{ url_for('main.export_proposal', proposal_acronym=proposal.acronym, format='md') }}">Markdown</a>
+                        <a class="dropdown-item" href="{{ url_for('main.export_proposal', proposal_acronym=proposal.acronym, format='pdf') }}">PDF</a>
+                        <a class="dropdown-item" href="{{ url_for('main.export_proposal', proposal_acronym=proposal.acronym, format='tex') }}">LaTeX</a>
+                        <a class="dropdown-item" href="{{ url_for('main.submit_to_trello', proposal_acronym=proposal.acronym) }}">Trello</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    {% include '_dashboard_quickview.html' %}
+    <hr>
+    {% include '_dashboard_budget.html' %}
+    <hr>
+    {% include '_dashboard_wps.html' %}
+    <hr>
+    {% include '_dashboard_users.html' %}
+</div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
+<link href="https://cdn.datatables.net/v/dt/jq-3.3.1/jszip-2.5.0/dt-1.10.22/af-2.3.5/b-1.6.4/b-colvis-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/cr-1.5.2/kt-2.5.3/r-2.2.6/rr-1.2.7/sl-1.3.1/datatables.min.css"
+      rel="stylesheet"
+      type="text/css"/>
+
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" rel="stylesheet">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/v/dt/jq-3.3.1/jszip-2.5.0/dt-1.10.22/af-2.3.5/b-1.6.4/b-colvis-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/cr-1.5.2/kt-2.5.3/r-2.2.6/rr-1.2.7/sl-1.3.1/datatables.min.js"
+        type="text/javascript"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<!--<script href="{{ url_for('static', filename='js/highcharts/highcharts.js') }}"></script>-->
+
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script src="https://code.highcharts.com/gantt/modules/gantt.js"></script>
+<script src="https://code.highcharts.com/gantt/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+
+<script src="https://code.highcharts.com/maps/modules/map.js"></script>
+<script src="https://code.highcharts.com/mapdata/custom/europe.js"></script>
+
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+</script>
+
+<script type="text/javascript">
+  new Highcharts.Chart('chart', {{chart|safe}});
+</script>
+
+<script type="text/javascript">
+  new Highcharts.ganttChart('gantt', {{gantt|safe}});
+</script>
+
+<script type="text/javascript">
+// Instantiate the map
+  new Highcharts.mapChart('map', {{map|safe}});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('table.display').DataTable({
+      paging: false,
+      colReorder: true,
+      rowReorder: true,
+      select: true,
+      keys: true,
+      dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf'
+      ]
+  });
+});
+</script>
+
+
+{% endblock %}
